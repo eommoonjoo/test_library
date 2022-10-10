@@ -110,7 +110,7 @@ const Table = ({ height, columns, data, colgroup }: TableProps) => {
     state: { selectedRowIds },
   } = useTable(
     {
-      columns,
+      columns: _columns,
       data,
       defaultColumn,
       filterTypes,
@@ -143,7 +143,7 @@ const Table = ({ height, columns, data, colgroup }: TableProps) => {
   console.log("selectedFlatRows", selectedFlatRows);
 
   return (
-    <Styles colgroup={colgroup} height={500}>
+    <Styles colgroup={colgroup} height={height}>
       <div {...getTableProps()} className="table sticky">
         {/* <Colgroup /> */}
         <div className="header">
