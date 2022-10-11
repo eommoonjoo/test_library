@@ -51,7 +51,13 @@ interface IndeterminateCheckboxProps {
   indeterminate: boolean;
 }
 
-const Table = ({ height, columns, data, colgroup }: TableProps) => {
+const Table = ({
+  height,
+  columns,
+  data,
+  colgroup,
+  useCheckbox,
+}: TableProps) => {
   const IndeterminateCheckbox = React.forwardRef(
     ({ indeterminate, ...rest }: IndeterminateCheckboxProps, ref: any) => {
       const defaultRef = React.useRef();
@@ -119,22 +125,26 @@ const Table = ({ height, columns, data, colgroup }: TableProps) => {
     useSticky,
     useRowSelect,
     (hooks) => {
-      hooks.visibleColumns.push((columns) => [
-        {
-          id: "selection",
-          Header: ({ getToggleAllRowsSelectedProps }: any) => (
-            <div>
-              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-            </div>
-          ),
-          Cell: ({ row }: any) => (
-            <div>
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-            </div>
-          ),
-        },
-        ...columns,
-      ]);
+      if (useCheckbox) {
+        return hooks.visibleColumns.push((columns) => [
+          {
+            id: "selection",
+            Header: ({ getToggleAllRowsSelectedProps }: any) => (
+              <div>
+                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+              </div>
+            ),
+            Cell: ({ row }: any) => (
+              <div>
+                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+              </div>
+            ),
+          },
+          ...columns,
+        ]);
+      } else {
+        return { ...columns };
+      }
     }
   );
 
