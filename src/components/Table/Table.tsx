@@ -52,8 +52,6 @@ interface IndeterminateCheckboxProps {
 }
 
 const Table = ({ height, columns, data, colgroup }: TableProps) => {
-  const _columns = React.useMemo(() => [...columns], []);
-
   const IndeterminateCheckbox = React.forwardRef(
     ({ indeterminate, ...rest }: IndeterminateCheckboxProps, ref: any) => {
       const defaultRef = React.useRef();
@@ -110,7 +108,7 @@ const Table = ({ height, columns, data, colgroup }: TableProps) => {
     state: { selectedRowIds },
   } = useTable(
     {
-      columns: _columns,
+      columns,
       data,
       defaultColumn,
       filterTypes,
