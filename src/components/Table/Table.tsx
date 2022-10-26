@@ -11,7 +11,7 @@ import {
 import { useSticky } from "react-table-sticky";
 import styled from "styled-components";
 
-interface TableProps {
+export interface TableProps {
   /**
    * table 높이
    */
@@ -215,7 +215,7 @@ const Styles = styled.div<{ colgroup: { col: number }[]; height: number }>`
 
       :last-child {
         .td {
-          border-bottom: 0;
+          /* border-bottom: 0; */
         }
       }
     }

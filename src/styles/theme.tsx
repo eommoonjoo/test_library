@@ -61,6 +61,10 @@ interface TColors<T> {
   touchB_red: T;
 }
 
+interface Colors<T> {
+  [k: string]: T;
+}
+
 export const colors: TColors<string> = {
   touchB_grey1: "#f4f4f4",
   touchB_grey2: "#e1e1e1",
