@@ -10,6 +10,7 @@ const MockTable = () => {
         height={500}
         useCheckbox={true}
         data={data}
+        customStyles={{ thHeight: "60px", tdHeight: "20px" }}
       />
     </React.Fragment>
   );

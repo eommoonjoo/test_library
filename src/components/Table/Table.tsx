@@ -45,6 +45,11 @@ export interface TableProps {
    */
 
   colgroup: { col: number }[];
+
+  customStyles?: {
+    thHeight?: string;
+    tdHeight?: string;
+  };
 }
 
 interface IndeterminateCheckboxProps {
@@ -57,6 +62,7 @@ const Table = ({
   data,
   colgroup,
   useCheckbox,
+  customStyles,
 }: TableProps) => {
   const IndeterminateCheckbox = React.forwardRef(
     ({ indeterminate, ...rest }: IndeterminateCheckboxProps, ref: any) => {
@@ -148,10 +154,11 @@ const Table = ({
     }
   );
 
-  console.log("selectedFlatRows", selectedFlatRows);
+  // console.log("selectedFlatRows", selectedFlatRows);
+  console.log("customStyles", customStyles);
 
   return (
-    <Styles colgroup={colgroup} height={height}>
+    <Styles colgroup={colgroup} height={height} customStyles={customStyles}>
       <div {...getTableProps()} className="table sticky">
         {/* <Colgroup /> */}
         <div className="header">
@@ -201,7 +208,11 @@ const Table = ({
 
 export default Table;
 
-const Styles = styled.div<{ colgroup: { col: number }[]; height: number }>`
+const Styles = styled.div<{
+  colgroup: { col: number }[];
+  height: number;
+  customStyles?: { thHeight?: string; tdHeight?: string };
+}>`
   .table {
     border: 1px solid #ddd;
     width: 100%;
@@ -231,7 +242,7 @@ const Styles = styled.div<{ colgroup: { col: number }[]; height: number }>`
       font-size: 12px;
       text-align: center;
       word-break: keep-all;
-      height: 30px;
+      height: ${({ customStyles }) => `${customStyles?.thHeight || "30px"}`};
       overflow: hidden;
       width: 100%;
 
@@ -265,7 +276,7 @@ const Styles = styled.div<{ colgroup: { col: number }[]; height: number }>`
       text-align: center;
       font-size: 12px;
       word-break: keep-all;
-      height: 30px;
+      height: ${({ customStyles }) => `${customStyles?.tdHeight || "30px"}`};
       overflow: hidden;
       width: 100%;
 
