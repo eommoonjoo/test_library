@@ -24,8 +24,13 @@ export interface TableProps {
 
   columns: {
     Header: string;
-    accessor: string;
-    Cell: ({ value, row }) => any;
+    accessor?: string;
+    columns?: {
+      Header?: any;
+      accessor?: string;
+      Cell?: ({ value, row }) => any;
+    }[];
+    Cell?: ({ value, row }) => any;
   }[];
 
   /**
@@ -44,7 +49,9 @@ export interface TableProps {
    * table 넓이 조절
    */
 
-  colgroup: { col: number }[];
+  colgroup: { col: number; align?: "NOCENTER" }[];
+
+  colgroupHd: { col: number }[];
 
   customStyles?: {
     thHeight?: string;
@@ -63,6 +70,7 @@ const Table = ({
   colgroup,
   useCheckbox,
   customStyles,
+  colgroupHd,
 }: TableProps) => {
   const IndeterminateCheckbox = React.forwardRef(
     ({ indeterminate, ...rest }: IndeterminateCheckboxProps, ref: any) => {
@@ -154,28 +162,41 @@ const Table = ({
     }
   );
 
-  // console.log("selectedFlatRows", selectedFlatRows);
-  console.log("customStyles", customStyles);
-
   return (
-    <Styles colgroup={colgroup} height={height} customStyles={customStyles}>
+    <Styles
+      colgroup={colgroup}
+      height={height}
+      customStyles={customStyles}
+      colgroupHd={colgroupHd}
+    >
       <div {...getTableProps()} className="table sticky">
         {/* <Colgroup /> */}
         <div className="header">
           {headerGroups.map((headerGroup) => (
             <div className="tr" {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => {
+                console.log("columns", column);
+                if (column.columns) {
+                  return (
+                    <div
+                      className="th-custom"
+                      // {...column.getHeaderProps(column.getSortByToggleProps())}
+                      {...column.getHeaderProps()}
+                    >
+                      {column.render("Header")}
+                      <div>
+                        {column.canFilter ? column.render("Filter") : null}
+                      </div>
+                    </div>
+                  );
+                }
                 return (
                   <div
                     className="th"
                     // {...column.getHeaderProps(column.getSortByToggleProps())}
                     {...column.getHeaderProps()}
-                    // className={classnames({
-                    //   filter: column.Header === "지급방식" ? true : false,
-                    // })}
-                    // onClick={() => console.log(column.id)}
                   >
-                    {column.render("Header")}
+                    <div className="th-text">{column.render("Header")}</div>
                     <div>
                       {column.canFilter ? column.render("Filter") : null}
                     </div>
@@ -209,7 +230,8 @@ const Table = ({
 export default Table;
 
 const Styles = styled.div<{
-  colgroup: { col: number }[];
+  colgroup: { col: number; align?: string }[];
+  colgroupHd: { col: number }[];
   height: number;
   customStyles?: { thHeight?: string; tdHeight?: string };
 }>`
@@ -231,7 +253,8 @@ const Styles = styled.div<{
       }
     }
 
-    .th {
+    .th,
+    .th-custom {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -313,10 +336,38 @@ const Styles = styled.div<{
         top: 0;
         box-shadow: 0px 3px 3px #ccc;
         width: 100%;
+        position: relative;
 
         ${(props) => {
           return props.colgroup.map((value, index) => {
             return `.th {
+                  :nth-child(${index + 1}) {
+                    width: ${value.col}%;
+                    
+                    border-bottom:${
+                      props.colgroupHd.length > 0 && "1px solid #f5f5f5"
+                    };
+                    .th-text {
+                      position:${value.align !== "NOCENTER" && "absolute"};
+                      top:${
+                        (Number(
+                          (props.customStyles?.thHeight || "30px")
+                            .split("px")
+                            .join("")
+                        ) /
+                          3) *
+                        2.5
+                      }px;  
+                    }
+
+                  }
+                }`;
+          });
+        }}
+
+        ${(props) => {
+          return props.colgroupHd.map((value, index) => {
+            return `.th-custom {
                   :nth-child(${index + 1}) {
                     width: ${value.col}%
                   }

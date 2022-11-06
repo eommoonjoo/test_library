@@ -8,9 +8,10 @@ const MockTable = () => {
         colgroup={colgroup}
         columns={columns}
         height={500}
-        useCheckbox={true}
+        useCheckbox={false}
+        colgroupHd={colgroupHd}
         data={data}
-        customStyles={{ thHeight: "60px", tdHeight: "20px" }}
+        customStyles={{ thHeight: "30px", tdHeight: "30px" }}
       />
     </React.Fragment>
   );
@@ -21,18 +22,21 @@ export default MockTable;
 const columns = [
   {
     Header: "번호",
-    accessor: "paymentId",
-    Cell: ({ value, row }) => {
-      return value;
-    },
+    columns: [
+      {
+        Header: "테스트",
+        accessor: "paymentId",
+      },
+      {
+        Header: "직원명",
+        accessor: "name",
+        Cell: ({ value, row }) => {
+          return value;
+        },
+      },
+    ],
   },
-  {
-    Header: "직원명",
-    accessor: "name",
-    Cell: ({ value, row }) => {
-      return value;
-    },
-  },
+
   {
     Header: "지급방식",
     accessor: "paymentType",
@@ -47,21 +51,32 @@ const columns = [
   },
 ];
 
-const colgroup = [
+const colgroup: { col: number; align?: "NOCENTER" | undefined }[] = [
   {
-    col: 20,
+    col: 25,
+    align: "NOCENTER",
   },
   {
-    col: 20,
+    col: 25,
+    align: "NOCENTER",
   },
   {
-    col: 20,
+    col: 25,
   },
   {
-    col: 20,
+    col: 25,
+  },
+];
+
+const colgroupHd = [
+  {
+    col: 50,
   },
   {
-    col: 20,
+    col: 25,
+  },
+  {
+    col: 25,
   },
 ];
 
