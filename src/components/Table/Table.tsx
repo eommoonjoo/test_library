@@ -51,7 +51,7 @@ export interface TableProps {
 
   colgroup: { col: number; align?: "NOCENTER" }[];
 
-  colgroupHd: { col: number }[];
+  colgroupHd?: { col: number }[];
 
   customStyles?: {
     thHeight?: string;
@@ -231,7 +231,7 @@ export default Table;
 
 const Styles = styled.div<{
   colgroup: { col: number; align?: string }[];
-  colgroupHd: { col: number }[];
+  colgroupHd?: { col: number }[];
   height: number;
   customStyles?: { thHeight?: string; tdHeight?: string };
 }>`
@@ -345,7 +345,9 @@ const Styles = styled.div<{
                     width: ${value.col}%;
                     
                     border-bottom:${
-                      props.colgroupHd.length > 0 && "1px solid #f5f5f5"
+                      props.colgroupHd &&
+                      props.colgroupHd.length > 0 &&
+                      "1px solid #f5f5f5"
                     };
                     .th-text {
                       position:${value.align !== "NOCENTER" && "absolute"};
@@ -366,13 +368,16 @@ const Styles = styled.div<{
         }}
 
         ${(props) => {
-          return props.colgroupHd.map((value, index) => {
-            return `.th-custom {
+          return (
+            props.colgroupHd &&
+            props.colgroupHd.map((value, index) => {
+              return `.th-custom {
                   :nth-child(${index + 1}) {
                     width: ${value.col}%
                   }
                 }`;
-          });
+            })
+          );
         }}
       }
 
