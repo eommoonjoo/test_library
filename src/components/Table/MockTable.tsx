@@ -21,10 +21,11 @@ export default MockTable;
 
 const columns = [
   {
-    Header: "번호",
+    Header: <div onClick={() => console.log("헤더")}>헤더</div>,
+    accessor: "-1",
     columns: [
       {
-        Header: "테스트",
+        Header: <div onClick={() => console.log("테스트")}>테스트</div>,
         accessor: "paymentId",
       },
       {

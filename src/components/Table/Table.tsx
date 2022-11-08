@@ -23,8 +23,9 @@ export interface TableProps {
    */
 
   columns: {
-    Header: string;
-    accessor?: string;
+    Header: any;
+
+    accessor: string;
     columns?: {
       Header?: any;
       accessor?: string;
