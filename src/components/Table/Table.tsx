@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   useTable,
   useRowSelect,
@@ -58,175 +58,193 @@ export interface TableProps {
     thHeight?: string;
     tdHeight?: string;
   };
+
+  onRowClick?: (e?: any) => void;
+
+  onHandleScroll?: (e?: any) => void;
 }
 
 interface IndeterminateCheckboxProps {
   indeterminate: boolean;
 }
 
-const Table = ({
-  height,
-  columns,
-  data,
-  colgroup,
-  useCheckbox,
-  customStyles,
-  colgroupHd,
-}: TableProps) => {
-  const IndeterminateCheckbox = React.forwardRef(
-    ({ indeterminate, ...rest }: IndeterminateCheckboxProps, ref: any) => {
-      const defaultRef = React.useRef();
-      const resolvedRef = ref || defaultRef;
-
-      React.useEffect(() => {
-        resolvedRef.current.indeterminate = indeterminate;
-      }, [resolvedRef, indeterminate]);
-
-      return (
-        <>
-          <input type="checkbox" ref={resolvedRef} {...rest} />
-        </>
-      );
-    }
-  );
-
-  function DefaultColumnFilter({
-    column: { filterValue, preFilteredRows, setFilter },
-  }) {
-    return null;
-  }
-
-  const defaultColumn = React.useMemo(
-    () => ({
-      Filter: DefaultColumnFilter,
-    }),
-    []
-  );
-
-  const filterTypes = React.useMemo(
-    () => ({
-      text: (rows, id, filterValue) => {
-        return rows.filter((row) => {
-          const rowValue = row.values[id];
-          return rowValue !== undefined
-            ? String(rowValue)
-                .toLowerCase()
-                .startsWith(String(filterValue).toLowerCase())
-            : true;
-        });
-      },
-    }),
-    []
-  );
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    selectedFlatRows,
-    state: { selectedRowIds },
-  } = useTable(
+const Table = React.forwardRef(
+  (
     {
+      height,
       columns,
       data,
-      defaultColumn,
-      filterTypes,
-    },
-    useFilters,
-    useGlobalFilter,
-    useSortBy,
-    useSticky,
-    useRowSelect,
-    (hooks) => {
-      if (useCheckbox) {
-        return hooks.visibleColumns.push((columns) => [
-          {
-            id: "selection",
-            Header: ({ getToggleAllRowsSelectedProps }: any) => (
-              <div>
-                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-              </div>
-            ),
-            Cell: ({ row }: any) => (
-              <div>
-                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-              </div>
-            ),
-          },
-          ...columns,
-        ]);
-      } else {
-        return { ...columns };
-      }
-    }
-  );
+      colgroup,
+      useCheckbox,
+      customStyles,
+      colgroupHd,
+      onRowClick,
+      onHandleScroll,
+    }: TableProps,
+    ref
+  ) => {
+    const IndeterminateCheckbox = React.forwardRef(
+      ({ indeterminate, ...rest }: IndeterminateCheckboxProps, ref: any) => {
+        const defaultRef = React.useRef();
+        const resolvedRef = ref || defaultRef;
 
-  return (
-    <Styles
-      colgroup={colgroup}
-      height={height}
-      customStyles={customStyles}
-      colgroupHd={colgroupHd}
-    >
-      <div {...getTableProps()} className="table sticky">
-        {/* <Colgroup /> */}
-        <div className="header">
-          {headerGroups.map((headerGroup) => (
-            <div className="tr" {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => {
-                console.log("columns", column);
-                if (column.columns) {
+        React.useEffect(() => {
+          resolvedRef.current.indeterminate = indeterminate;
+        }, [resolvedRef, indeterminate]);
+
+        return (
+          <>
+            <input type="checkbox" ref={resolvedRef} {...rest} />
+          </>
+        );
+      }
+    );
+
+    function DefaultColumnFilter({
+      column: { filterValue, preFilteredRows, setFilter },
+    }) {
+      return null;
+    }
+
+    const defaultColumn = React.useMemo(
+      () => ({
+        Filter: DefaultColumnFilter,
+      }),
+      []
+    );
+
+    const filterTypes = React.useMemo(
+      () => ({
+        text: (rows, id, filterValue) => {
+          return rows.filter((row) => {
+            const rowValue = row.values[id];
+            return rowValue !== undefined
+              ? String(rowValue)
+                  .toLowerCase()
+                  .startsWith(String(filterValue).toLowerCase())
+              : true;
+          });
+        },
+      }),
+      []
+    );
+
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+      selectedFlatRows,
+      state: { selectedRowIds },
+    } = useTable(
+      {
+        columns,
+        data,
+        defaultColumn,
+        filterTypes,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy,
+      useSticky,
+      useRowSelect,
+      (hooks) => {
+        if (useCheckbox) {
+          return hooks.visibleColumns.push((columns) => [
+            {
+              id: "selection",
+              Header: ({ getToggleAllRowsSelectedProps }: any) => (
+                <div>
+                  <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                </div>
+              ),
+              Cell: ({ row }: any) => (
+                <div>
+                  <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+                </div>
+              ),
+            },
+            ...columns,
+          ]);
+        } else {
+          return { ...columns };
+        }
+      }
+    );
+
+    return (
+      <Styles
+        colgroup={colgroup}
+        height={height}
+        customStyles={customStyles}
+        colgroupHd={colgroupHd}
+      >
+        <div
+          {...getTableProps()}
+          className="table sticky"
+          ref={ref}
+          onScroll={onHandleScroll}
+        >
+          <div className="header">
+            {headerGroups.map((headerGroup) => (
+              <div className="tr" {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => {
+                  if (column.columns) {
+                    return (
+                      <div
+                        className="th-custom"
+                        // {...column.getHeaderProps(column.getSortByToggleProps())}
+                        {...column.getHeaderProps()}
+                      >
+                        {column.render("Header")}
+                        <div>
+                          {column.canFilter ? column.render("Filter") : null}
+                        </div>
+                      </div>
+                    );
+                  }
                   return (
                     <div
-                      className="th-custom"
+                      className="th"
                       // {...column.getHeaderProps(column.getSortByToggleProps())}
                       {...column.getHeaderProps()}
                     >
-                      {column.render("Header")}
+                      <div className="th-text">{column.render("Header")}</div>
                       <div>
                         {column.canFilter ? column.render("Filter") : null}
                       </div>
                     </div>
                   );
-                }
-                return (
-                  <div
-                    className="th"
-                    // {...column.getHeaderProps(column.getSortByToggleProps())}
-                    {...column.getHeaderProps()}
-                  >
-                    <div className="th-text">{column.render("Header")}</div>
-                    <div>
-                      {column.canFilter ? column.render("Filter") : null}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ))}
-        </div>
-        <div {...getTableBodyProps()} className="body">
-          {rows.map((row, i) => {
-            prepareRow(row);
-            return (
-              <div {...row.getRowProps()} className="tr">
-                {row.cells.map((cell) => {
-                  return (
-                    <div {...cell.getCellProps()} className="td">
-                      {cell.render("Cell")}
-                    </div>
-                  );
                 })}
               </div>
-            );
-          })}
+            ))}
+          </div>
+          <div {...getTableBodyProps()} className="body">
+            {rows.map((row, i) => {
+              prepareRow(row);
+              return (
+                <div {...row.getRowProps()} className="tr">
+                  {row.cells.map((cell) => {
+                    return (
+                      <div
+                        onClick={onRowClick}
+                        {...cell.getCellProps()}
+                        className="td"
+                      >
+                        {cell.render("Cell")}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
-    </Styles>
-  );
-};
+      </Styles>
+    );
+  }
+);
 
 export default Table;
 
@@ -337,7 +355,7 @@ const Styles = styled.div<{
         top: 0;
         box-shadow: 0px 3px 3px #ccc;
         width: 100%;
-        position: relative;
+        position: sticky;
 
         ${(props) => {
           return props.colgroup.map((value, index) => {

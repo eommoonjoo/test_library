@@ -1,7 +1,18 @@
-import React from "react";
+import React, { useRef } from "react";
 import Table from "./Table";
 
 const MockTable = () => {
+  const ref = useRef(null);
+
+  const handleScroll = (e) => {
+    console.log(e.currentTarget.scrollTop);
+    console.log(e.currentTarget.offsetHeight);
+  };
+
+  const handleRowClick = (e) => {
+    console.log("찍음");
+  };
+
   return (
     <React.Fragment>
       <Table
@@ -12,6 +23,9 @@ const MockTable = () => {
         colgroupHd={colgroupHd}
         data={data}
         customStyles={{ thHeight: "30px", tdHeight: "30px" }}
+        onRowClick={handleRowClick}
+        ref={ref}
+        onHandleScroll={handleScroll}
       />
     </React.Fragment>
   );
