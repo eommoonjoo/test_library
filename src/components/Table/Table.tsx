@@ -10,6 +10,7 @@ import {
 } from "react-table";
 import { useSticky } from "react-table-sticky";
 import styled from "styled-components";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export interface TableProps {
   /**
@@ -62,6 +63,10 @@ export interface TableProps {
   onRowClick?: (e?: any) => void;
 
   onHandleScroll?: (e?: any) => void;
+
+  setData?: React.Dispatch<React.SetStateAction<any[]>>;
+
+  useDrag?: boolean;
 }
 
 interface IndeterminateCheckboxProps {
@@ -80,6 +85,8 @@ const Table = React.forwardRef(
       colgroupHd,
       onRowClick,
       onHandleScroll,
+      setData,
+      useDrag,
     }: TableProps,
     ref
   ) => {
@@ -173,75 +180,116 @@ const Table = React.forwardRef(
       }
     );
 
+    const handleDragEnd = (list, startIndex, endIndex) => {
+      const result: any[] = Array.from(list);
+      const [removed] = result.splice(startIndex, 1);
+      result.splice(endIndex, 0, removed);
+      setData && setData(result);
+    };
+
     return (
-      <Styles
-        colgroup={colgroup}
-        height={height}
-        customStyles={customStyles}
-        colgroupHd={colgroupHd}
+      <DragDropContext
+        onDragEnd={(result) =>
+          handleDragEnd(data, result.source.index, result.destination.index)
+        }
       >
-        <div
-          {...getTableProps()}
-          className="table sticky"
-          ref={ref}
-          onScroll={onHandleScroll}
+        <Styles
+          colgroup={colgroup}
+          height={height}
+          customStyles={customStyles}
+          colgroupHd={colgroupHd}
         >
-          <div className="header">
-            {headerGroups.map((headerGroup) => (
-              <div className="tr" {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => {
-                  if (column.columns) {
+          <div
+            {...getTableProps()}
+            className="table sticky"
+            ref={ref}
+            onScroll={onHandleScroll}
+          >
+            <div className="header">
+              {headerGroups.map((headerGroup) => (
+                <div className="tr" {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => {
+                    if (column.columns) {
+                      return (
+                        <div
+                          className="th-custom"
+                          // {...column.getHeaderProps(column.getSortByToggleProps())}
+                          {...column.getHeaderProps()}
+                        >
+                          {column.render("Header")}
+                          <div>
+                            {column.canFilter ? column.render("Filter") : null}
+                          </div>
+                        </div>
+                      );
+                    }
                     return (
                       <div
-                        className="th-custom"
+                        className="th"
                         // {...column.getHeaderProps(column.getSortByToggleProps())}
                         {...column.getHeaderProps()}
                       >
-                        {column.render("Header")}
+                        <div className="th-text">{column.render("Header")}</div>
                         <div>
                           {column.canFilter ? column.render("Filter") : null}
                         </div>
                       </div>
                     );
-                  }
-                  return (
-                    <div
-                      className="th"
-                      // {...column.getHeaderProps(column.getSortByToggleProps())}
-                      {...column.getHeaderProps()}
-                    >
-                      <div className="th-text">{column.render("Header")}</div>
-                      <div>
-                        {column.canFilter ? column.render("Filter") : null}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-          <div {...getTableBodyProps()} className="body">
-            {rows.map((row, i) => {
-              prepareRow(row);
-              return (
-                <div {...row.getRowProps()} className="tr">
-                  {row.cells.map((cell) => {
-                    return (
-                      <div
-                        onClick={onRowClick}
-                        {...cell.getCellProps()}
-                        className="td"
-                      >
-                        {cell.render("Cell")}
-                      </div>
-                    );
                   })}
                 </div>
-              );
-            })}
+              ))}
+            </div>
+            <Droppable droppableId="table-list">
+              {(provided) => {
+                return (
+                  <div
+                    {...getTableBodyProps()}
+                    className="body"
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                  >
+                    {rows.map((row, i) => {
+                      prepareRow(row);
+                      return (
+                        <Draggable
+                          isDragDisabled={!useDrag}
+                          key={i}
+                          draggableId={i.toString()}
+                          index={i}
+                        >
+                          {(provided) => {
+                            return (
+                              <div
+                                {...row.getRowProps()}
+                                className="tr"
+                                ref={provided.innerRef}
+                                {...provided.dragHandleProps}
+                                {...provided.draggableProps}
+                              >
+                                {row.cells.map((cell) => {
+                                  return (
+                                    <div
+                                      onClick={onRowClick}
+                                      {...cell.getCellProps()}
+                                      className="td"
+                                    >
+                                      {cell.render("Cell")}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            );
+                          }}
+                        </Draggable>
+                      );
+                    })}
+                  </div>
+                );
+              }}
+            </Droppable>
           </div>
-        </div>
-      </Styles>
+        </Styles>
+      </DragDropContext>
     );
   }
 );

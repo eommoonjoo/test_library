@@ -1,17 +1,16 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Table from "./Table";
 
 const MockTable = () => {
   const ref = useRef(null);
+  const [localData, setLocalData] = useState<any[]>(data);
 
   const handleScroll = (e) => {
-    console.log(e.currentTarget.scrollTop);
-    console.log(e.currentTarget.offsetHeight);
+    // console.log(e.currentTarget.scrollTop);
+    // console.log(e.currentTarget.offsetHeight);
   };
 
-  const handleRowClick = (e) => {
-    console.log("찍음");
-  };
+  const handleRowClick = (e) => {};
 
   return (
     <React.Fragment>
@@ -21,11 +20,13 @@ const MockTable = () => {
         height={500}
         useCheckbox={false}
         colgroupHd={colgroupHd}
-        data={data}
+        data={localData}
         customStyles={{ thHeight: "30px", tdHeight: "30px" }}
         onRowClick={handleRowClick}
         ref={ref}
         onHandleScroll={handleScroll}
+        setData={setLocalData}
+        useDrag={true}
       />
     </React.Fragment>
   );
@@ -121,241 +122,73 @@ const data = [
     paymentDay: "25일",
   },
   {
-    paymentId: 1,
+    paymentId: 5,
     name: "엄문주",
     paymentType: "계좌이체",
     paymentDay: "25일",
   },
   {
-    paymentId: 2,
+    paymentId: 6,
     name: "엄문주",
     paymentType: "계좌이체",
     paymentDay: "25일",
   },
   {
-    paymentId: 3,
+    paymentId: 7,
     name: "엄문주",
     paymentType: "계좌이체",
     paymentDay: "25일",
   },
   {
-    paymentId: 4,
+    paymentId: 8,
     name: "엄문주",
     paymentType: "계좌이체",
     paymentDay: "25일",
   },
   {
-    paymentId: 1,
+    paymentId: 9,
     name: "엄문주",
     paymentType: "계좌이체",
     paymentDay: "25일",
   },
   {
-    paymentId: 2,
+    paymentId: 10,
     name: "엄문주",
     paymentType: "계좌이체",
     paymentDay: "25일",
   },
   {
-    paymentId: 3,
+    paymentId: 11,
     name: "엄문주",
     paymentType: "계좌이체",
     paymentDay: "25일",
   },
   {
-    paymentId: 4,
+    paymentId: 12,
     name: "엄문주",
     paymentType: "계좌이체",
     paymentDay: "25일",
   },
   {
-    paymentId: 1,
+    paymentId: 13,
     name: "엄문주",
     paymentType: "계좌이체",
     paymentDay: "25일",
   },
   {
-    paymentId: 2,
+    paymentId: 14,
     name: "엄문주",
     paymentType: "계좌이체",
     paymentDay: "25일",
   },
   {
-    paymentId: 3,
+    paymentId: 15,
     name: "엄문주",
     paymentType: "계좌이체",
     paymentDay: "25일",
   },
   {
-    paymentId: 4,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 1,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 2,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 3,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 4,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 1,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 2,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 3,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 4,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 1,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 2,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 3,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 4,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 1,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 2,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 3,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 4,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 1,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 2,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 3,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 4,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 1,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 2,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 3,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 4,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 1,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 2,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 3,
-    name: "엄문주",
-    paymentType: "계좌이체",
-    paymentDay: "25일",
-  },
-  {
-    paymentId: 4,
+    paymentId: 16,
     name: "엄문주",
     paymentType: "계좌이체",
     paymentDay: "25일",
