@@ -12,6 +12,10 @@ const MockTable = () => {
 
   const handleRowClick = (e) => {};
 
+  const handleDrag = (parameter) => {
+    setLocalData(parameter);
+  };
+
   return (
     <React.Fragment>
       <Table
@@ -26,6 +30,7 @@ const MockTable = () => {
         ref={ref}
         onHandleScroll={handleScroll}
         setData={setLocalData}
+        handleDrag={handleDrag}
         useDrag={true}
       />
     </React.Fragment>

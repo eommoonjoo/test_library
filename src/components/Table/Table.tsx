@@ -1,12 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   useTable,
   useRowSelect,
   useFilters,
   useGlobalFilter,
-  useAsyncDebounce,
   useSortBy,
-  HeaderGroup,
 } from "react-table";
 import { useSticky } from "react-table-sticky";
 import styled from "styled-components";
@@ -60,13 +58,35 @@ export interface TableProps {
     tdHeight?: string;
   };
 
+  /**
+   * tr을 클릭할 수 있는 버튼
+   */
+
   onRowClick?: (e?: any) => void;
+
+  /**
+   * handleScroll 을 넘길 수 있음
+   */
 
   onHandleScroll?: (e?: any) => void;
 
+  /**
+   * Drag & Drop을 사용하기 위해서 필요한 setState
+   */
+
   setData?: React.Dispatch<React.SetStateAction<any[]>>;
 
+  /**
+   * Drag & Drop 사용여부
+   */
+
   useDrag?: boolean;
+
+  /**
+   * Drag * Drop을 사용하기 위한 callback
+   */
+
+  handleDrag?: (parameter: any) => void;
 }
 
 interface IndeterminateCheckboxProps {
@@ -87,6 +107,7 @@ const Table = React.forwardRef(
       onHandleScroll,
       setData,
       useDrag,
+      handleDrag,
     }: TableProps,
     ref
   ) => {
@@ -184,7 +205,7 @@ const Table = React.forwardRef(
       const result: any[] = Array.from(list);
       const [removed] = result.splice(startIndex, 1);
       result.splice(endIndex, 0, removed);
-      setData && setData(result);
+      handleDrag && handleDrag(result);
     };
 
     return (

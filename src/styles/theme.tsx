@@ -82,3 +82,5 @@ export const colors: TColors<string> = {
   touchB_blue: "#02023b",
   touchB_red: "#FF4B4C",
 };
+
+interface VColor<T> {}
