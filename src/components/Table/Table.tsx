@@ -62,7 +62,7 @@ export interface TableProps {
    * tr을 클릭할 수 있는 버튼
    */
 
-  onRowClick?: (e?: any) => void;
+  onRowClick?: (e?: any, r?: any) => void;
 
   /**
    * handleScroll 을 넘길 수 있음
@@ -290,7 +290,9 @@ const Table = React.forwardRef(
                                 {row.cells.map((cell) => {
                                   return (
                                     <div
-                                      onClick={onRowClick}
+                                      onClick={(e) =>
+                                        onRowClick && onRowClick(e, cell)
+                                      }
                                       {...cell.getCellProps()}
                                       className="td"
                                     >

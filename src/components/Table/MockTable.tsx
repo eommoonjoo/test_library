@@ -10,7 +10,9 @@ const MockTable = () => {
     // console.log(e.currentTarget.offsetHeight);
   };
 
-  const handleRowClick = (e) => {};
+  const handleRowClick = (e, r) => {
+    console.log("r", r);
+  };
 
   const handleDrag = (parameter) => {
     setLocalData(parameter);
