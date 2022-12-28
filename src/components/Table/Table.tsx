@@ -234,6 +234,7 @@ const Table = React.forwardRef(
                       return (
                         <div
                           className="th-custom"
+                          onClick={column.Header?.props?.onClick}
                           // {...column.getHeaderProps(column.getSortByToggleProps())}
                           {...column.getHeaderProps()}
                         >
@@ -247,6 +248,7 @@ const Table = React.forwardRef(
                     return (
                       <div
                         className="th"
+                        onClick={column.Header?.props?.onClick}
                         // {...column.getHeaderProps(column.getSortByToggleProps())}
                         {...column.getHeaderProps()}
                       >
