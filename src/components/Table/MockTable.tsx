@@ -67,6 +67,7 @@ const columns = [
       return value;
     },
   },
+
   {
     Header: "지급일",
     accessor: "paymentDay",

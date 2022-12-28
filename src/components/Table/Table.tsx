@@ -237,6 +237,9 @@ const Table = React.forwardRef(
                           onClick={column.Header?.props?.onClick}
                           // {...column.getHeaderProps(column.getSortByToggleProps())}
                           {...column.getHeaderProps()}
+                          style={{
+                            paddingRight: `${column.columns?.length - 1}px`,
+                          }}
                         >
                           {column.render("Header")}
                           <div>
@@ -464,6 +467,7 @@ const Styles = styled.div<{
             props.colgroupHd &&
             props.colgroupHd.map((value, index) => {
               return `.th-custom {
+
                   :nth-child(${index + 1}) {
                     width: ${value.col}%
                   }
