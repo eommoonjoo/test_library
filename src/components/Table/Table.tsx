@@ -56,6 +56,7 @@ export interface TableProps {
   customStyles?: {
     thHeight?: string;
     tdHeight?: string;
+    glBorder?: string;
   };
 
   /**
@@ -87,6 +88,12 @@ export interface TableProps {
    */
 
   handleDrag?: (parameter: any) => void;
+
+  /**
+   * Drag * Drop을 사용하기 위한 callback
+   */
+
+  noGlBorder?: boolean;
 }
 
 interface IndeterminateCheckboxProps {
@@ -108,6 +115,7 @@ const Table = React.forwardRef(
       setData,
       useDrag,
       handleDrag,
+      noGlBorder,
     }: TableProps,
     ref
   ) => {
@@ -219,6 +227,7 @@ const Table = React.forwardRef(
           height={height}
           customStyles={customStyles}
           colgroupHd={colgroupHd}
+          noGlBorder={noGlBorder}
         >
           <div
             {...getTableProps()}
@@ -328,10 +337,12 @@ const Styles = styled.div<{
   colgroup: { col: number; align?: string }[];
   colgroupHd?: { col: number }[];
   height: number;
-  customStyles?: { thHeight?: string; tdHeight?: string };
+  customStyles?: { thHeight?: string; tdHeight?: string; glBorder?: string };
+  noGlBorder?: boolean;
 }>`
   .table {
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
+    border: ${({ noGlBorder }) => (noGlBorder ? 0 : "1px solid #ddd")};
     width: 100%;
     display: flex;
     flex-direction: column;

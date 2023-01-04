@@ -34,6 +34,7 @@ const MockTable = () => {
         setData={setLocalData}
         handleDrag={handleDrag}
         useDrag={true}
+        noGlBorder={true}
       />
     </React.Fragment>
   );
