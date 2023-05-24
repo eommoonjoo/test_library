@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   useTable,
   useRowSelect,
@@ -94,6 +94,12 @@ export interface TableProps {
    */
 
   noGlBorder?: boolean;
+
+  /**
+   * setSelected
+   */
+
+  setSelected?: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
 interface IndeterminateCheckboxProps {
@@ -116,6 +122,7 @@ const Table = React.forwardRef(
       useDrag,
       handleDrag,
       noGlBorder,
+      setSelected,
     }: TableProps,
     ref
   ) => {
@@ -215,6 +222,10 @@ const Table = React.forwardRef(
       result.splice(endIndex, 0, removed);
       handleDrag && handleDrag(result);
     };
+
+    useEffect(() => {
+      setSelected && setSelected(selectedFlatRows);
+    }, [selectedFlatRows]);
 
     return (
       <DragDropContext
